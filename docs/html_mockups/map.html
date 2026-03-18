@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Inteligência Espacial — SisInfo / GeoIntel</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL@20..48,100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#14213d",
+                        "accent": "#fca311",
+                        "dark": "#000000",
+                        "muted": "#e5e5e5",
+                        "surface": "#ffffff",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "system-ui", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255,255,255,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .glass-dark { background: rgba(20,33,61,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .bottom-sheet-shadow { box-shadow: 0 -20px 60px rgba(0,0,0,0.15); }
+        /* Fake map grid lines */
+        .map-grid {
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+        /* Simulated choropleth polygons */
+        .polygon { transition: all 0.2s ease; }
+        .polygon:hover { filter: brightness(1.3); cursor: pointer; }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col antialiased bg-dark">
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- TOP BAR                                                     -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <header class="h-14 bg-surface border-b border-muted flex items-center justify-between px-5 z-50 shrink-0">
+        <!-- Brand -->
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded bg-primary flex items-center justify-center">
+                <span class="material-symbols-outlined text-surface text-[18px]" style="font-variation-settings:'FILL' 1">public</span>
+            </div>
+            <div class="leading-none">
+                <span class="text-[13px] font-extrabold text-primary tracking-tight block">SisInfo</span>
+                <span class="text-[9px] font-bold text-neutral-400 tracking-[0.15em] uppercase">Inteligência Territorial</span>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="flex-1 max-w-lg mx-6">
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-[18px]">search</span>
+                <input type="text" placeholder="Buscar município, coordenada ou setor censitário…" class="w-full bg-neutral-100 border-none rounded-full py-2 pl-10 pr-4 text-[13px] font-medium text-primary placeholder:text-neutral-400 focus:ring-2 focus:ring-accent/50 outline-none transition-shadow">
+            </div>
+        </div>
+
+        <!-- User area -->
+        <div class="flex items-center gap-3">
+            <button class="relative w-9 h-9 rounded-lg flex items-center justify-center text-neutral-400 hover:bg-neutral-100 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">notifications</span>
+                <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-surface"></span>
+            </button>
+            <div class="h-6 w-px bg-muted mx-1"></div>
+            <div class="flex items-center gap-2.5 cursor-pointer group">
+                <div class="text-right hidden md:block">
+                    <div class="text-[12px] font-bold text-primary leading-tight">Gestor Municipal</div>
+                    <div class="text-[10px] text-neutral-400 font-medium">Acesso Restrito</div>
+                </div>
+                <div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-surface text-[13px] font-bold relative ring-2 ring-neutral-200 group-hover:ring-accent transition-all">
+                    GM
+                    <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 border-2 border-surface rounded-full"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- MAP VIEWPORT (Fullscreen)                                   -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="flex-1 relative overflow-hidden">
+        <!-- Fake map background with dark choropleth look -->
+        <div class="absolute inset-0 map-grid" style="background-color: #0d1a30;">
+            <!-- Simulated Brazilian state polygons (simplified SVG shapes) -->
+            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+                <!-- Background glow -->
+                <defs>
+                    <radialGradient id="glow" cx="55%" cy="45%" r="40%">
+                        <stop offset="0%" stop-color="#1a2f55" />
+                        <stop offset="100%" stop-color="#0d1a30" />
+                    </radialGradient>
+                </defs>
+                <rect width="1440" height="810" fill="url(#glow)"/>
+                <!-- Simulated polygons — different shades for choropleth effect -->
+                <polygon class="polygon" points="620,180 680,160 720,200 750,280 700,320 640,300 600,250" fill="rgba(252,163,17,0.55)" stroke="rgba(252,163,17,0.8)" stroke-width="1.5"/>
+                <polygon class="polygon" points="720,200 780,180 830,230 810,310 750,280" fill="rgba(252,163,17,0.35)" stroke="rgba(252,163,17,0.5)" stroke-width="1"/>
+                <polygon class="polygon" points="640,300 700,320 720,380 670,400 610,360" fill="rgba(252,163,17,0.45)" stroke="rgba(252,163,17,0.6)" stroke-width="1"/>
+                <polygon class="polygon" points="550,220 600,250 640,300 610,360 540,340 510,280" fill="rgba(252,163,17,0.25)" stroke="rgba(252,163,17,0.4)" stroke-width="1"/>
+                <polygon class="polygon" points="750,280 810,310 830,380 780,400 720,380 700,320" fill="rgba(252,163,17,0.65)" stroke="rgba(252,163,17,0.9)" stroke-width="2"/>
+                <polygon class="polygon" points="830,230 880,250 890,320 830,380 810,310" fill="rgba(252,163,17,0.2)" stroke="rgba(252,163,17,0.35)" stroke-width="1"/>
+                <polygon class="polygon" points="670,400 720,380 780,400 760,460 700,470 650,440" fill="rgba(252,163,17,0.3)" stroke="rgba(252,163,17,0.45)" stroke-width="1"/>
+                <!-- Selected municipality highlight -->
+                <polygon points="750,280 810,310 830,380 780,400 720,380 700,320" fill="none" stroke="#fca311" stroke-width="3" stroke-dasharray="8,4" class="animate-pulse" opacity="0.9"/>
+            </svg>
+        </div>
+
+        <!-- ─── FLOATING FILTER PANEL (Left) ─── -->
+        <aside class="absolute top-4 left-4 w-[300px] glass rounded-xl z-10 border border-neutral-200/60 shadow-xl overflow-hidden">
+            <!-- Panel Header -->
+            <div class="flex items-center justify-between px-5 py-3.5 border-b border-neutral-200/60">
+                <h3 class="text-[12px] font-extrabold text-primary tracking-[0.08em] uppercase flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">tune</span>
+                    Filtros Espaciais
+                </h3>
+                <button class="w-7 h-7 rounded-md flex items-center justify-center hover:bg-neutral-100 text-neutral-400 transition-colors">
+                    <span class="material-symbols-outlined text-[16px]">close</span>
+                </button>
+            </div>
+
+            <div class="p-5 space-y-5">
+                <!-- Localidade -->
+                <div>
+                    <label class="text-[10px] font-bold text-neutral-500 tracking-[0.12em] uppercase mb-2 flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[13px]" style="font-variation-settings:'FILL' 1">location_on</span> Localidade
+                    </label>
+                    <select class="w-full border border-neutral-200 rounded-lg py-2 px-3 text-[13px] font-semibold text-primary bg-surface focus:ring-2 focus:ring-accent/40 focus:border-accent mb-2 cursor-pointer">
+                        <option>São Paulo, SP</option>
+                    </select>
+                    <select class="w-full border border-neutral-200 rounded-lg py-2 px-3 text-[13px] font-medium text-neutral-600 bg-surface focus:ring-2 focus:ring-accent/40 focus:border-accent cursor-pointer">
+                        <option>Todos os Setores Censitários</option>
+                    </select>
+                </div>
+
+                <!-- Indicadores -->
+                <div>
+                    <label class="text-[10px] font-bold text-neutral-500 tracking-[0.12em] uppercase mb-2.5 flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[13px]">monitoring</span> Indicadores
+                    </label>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-neutral-50 cursor-pointer transition-colors group">
+                            <input type="checkbox" checked class="w-4 h-4 rounded text-accent focus:ring-accent/50 border-neutral-300">
+                            <span class="text-[13px] font-medium text-primary group-hover:text-accent transition-colors">População Estimada</span>
+                        </label>
+                        <label class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-neutral-50 cursor-pointer transition-colors group">
+                            <input type="checkbox" class="w-4 h-4 rounded text-accent focus:ring-accent/50 border-neutral-300">
+                            <span class="text-[13px] font-medium text-primary group-hover:text-accent transition-colors">PIB per capita (R$)</span>
+                        </label>
+                        <label class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-neutral-50 cursor-pointer transition-colors group">
+                            <input type="checkbox" class="w-4 h-4 rounded text-accent focus:ring-accent/50 border-neutral-300">
+                            <span class="text-[13px] font-medium text-primary group-hover:text-accent transition-colors">IDH Municipal</span>
+                        </label>
+                        <label class="flex items-center gap-2.5 p-2 rounded-lg hover:bg-neutral-50 cursor-pointer transition-colors group">
+                            <input type="checkbox" class="w-4 h-4 rounded text-accent focus:ring-accent/50 border-neutral-300">
+                            <span class="text-[13px] font-medium text-primary group-hover:text-accent transition-colors">Índice de Gini</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Período -->
+                <div>
+                    <label class="text-[10px] font-bold text-neutral-500 tracking-[0.12em] uppercase mb-2.5 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[13px]">date_range</span> Período</span>
+                        <span class="bg-primary text-surface text-[10px] font-bold px-2 py-0.5 rounded">2022</span>
+                    </label>
+                    <input type="range" min="2010" max="2023" value="2022" class="w-full h-1.5 accent-accent bg-neutral-200 rounded-lg appearance-none cursor-pointer">
+                    <div class="flex justify-between text-[10px] font-bold text-neutral-400 mt-1.5 px-0.5">
+                        <span>2010</span><span>2015</span><span>2020</span><span>2023</span>
+                    </div>
+                </div>
+
+                <!-- Camadas -->
+                <div class="pt-2 border-t border-neutral-200/60">
+                    <label class="text-[10px] font-bold text-neutral-500 tracking-[0.12em] uppercase mb-2.5 flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[13px]">layers</span> Camadas Visuais
+                    </label>
+                    <div class="flex gap-2 flex-wrap">
+                        <button class="px-3 py-1.5 text-[11px] font-bold rounded-full bg-primary text-surface">Coroplético</button>
+                        <button class="px-3 py-1.5 text-[11px] font-bold rounded-full border border-neutral-300 text-neutral-500 hover:border-accent hover:text-accent transition-colors">Heatmap</button>
+                        <button class="px-3 py-1.5 text-[11px] font-bold rounded-full border border-neutral-300 text-neutral-500 hover:border-accent hover:text-accent transition-colors">Pontos</button>
+                        <button class="px-3 py-1.5 text-[11px] font-bold rounded-full border border-neutral-300 text-neutral-500 hover:border-accent hover:text-accent transition-colors">Satélite</button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ─── FLOATING CHOROPLETH LEGEND ─── -->
+        <div class="absolute bottom-28 left-4 glass rounded-lg px-4 py-3 z-10 border border-neutral-200/60 shadow-lg">
+            <div class="text-[10px] font-bold text-neutral-600 uppercase tracking-wider mb-2">População Estimada</div>
+            <div class="flex items-center gap-1">
+                <span class="text-[9px] text-neutral-500 font-medium">0</span>
+                <div class="flex h-2.5 rounded-sm overflow-hidden">
+                    <div class="w-8 bg-accent/15"></div>
+                    <div class="w-8 bg-accent/30"></div>
+                    <div class="w-8 bg-accent/45"></div>
+                    <div class="w-8 bg-accent/60"></div>
+                    <div class="w-8 bg-accent/80"></div>
+                    <div class="w-8 bg-accent"></div>
+                </div>
+                <span class="text-[9px] text-neutral-500 font-medium">12M+</span>
+            </div>
+        </div>
+
+        <!-- ─── MAP CONTROLS (Right) ─── -->
+        <div class="absolute top-4 right-4 flex flex-col z-10 glass rounded-xl border border-neutral-200/60 shadow-xl overflow-hidden">
+            <button title="Zoom In" class="w-10 h-10 flex items-center justify-center text-neutral-500 hover:text-primary hover:bg-neutral-50 border-b border-neutral-200/60 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">add</span>
+            </button>
+            <button title="Zoom Out" class="w-10 h-10 flex items-center justify-center text-neutral-500 hover:text-primary hover:bg-neutral-50 border-b border-neutral-200/60 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">remove</span>
+            </button>
+            <button title="Minha Localização" class="w-10 h-10 flex items-center justify-center text-neutral-500 hover:text-primary hover:bg-neutral-50 border-b border-neutral-200/60 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">my_location</span>
+            </button>
+            <button title="Camadas" class="w-10 h-10 flex items-center justify-center text-neutral-500 hover:text-primary hover:bg-neutral-50 border-b border-neutral-200/60 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">layers</span>
+            </button>
+            <button title="Medir Distância" class="w-10 h-10 flex items-center justify-center text-neutral-500 hover:text-primary hover:bg-neutral-50 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">straighten</span>
+            </button>
+        </div>
+
+        <!-- ─── PROCESSING STATUS BAR ─── -->
+        <div class="absolute bottom-28 left-1/2 -translate-x-1/2 glass-dark text-surface px-5 py-2 rounded-full text-[12px] font-bold flex items-center gap-2.5 shadow-2xl z-20 border border-white/10">
+            <span class="material-symbols-outlined animate-spin text-accent text-[16px]">progress_activity</span>
+            <span class="text-neutral-300">PROCESSANDO ÁREAS</span>
+            <span class="h-3 w-px bg-white/20 mx-1"></span>
+            <span class="text-accent">128 setores</span>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- BOTTOM SHEET — Painel de Informações da Localidade        -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <div class="absolute bottom-0 left-0 right-0 glass bottom-sheet-shadow rounded-t-2xl z-30 border-t border-neutral-200/60">
+            <!-- Drag handle -->
+            <div class="flex justify-center pt-2.5 pb-1">
+                <div class="w-10 h-1 bg-neutral-300 rounded-full"></div>
+            </div>
+
+            <div class="px-6 pb-6">
+                <!-- ─── Sheet Header ─── -->
+                <div class="flex items-center justify-between mb-5 pb-4 border-b border-neutral-200/60">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-primary/50 text-[28px]">location_city</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-3 mb-0.5">
+                                <h2 class="text-2xl font-black text-primary tracking-tight">São Paulo</h2>
+                                <span class="bg-accent text-dark text-[9px] font-black px-2 py-0.5 rounded tracking-[0.1em] uppercase">CAPITAL</span>
+                            </div>
+                            <div class="text-[12px] text-neutral-500 font-medium flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-[14px]">tag</span>
+                                IBGE: 3550308
+                                <span class="text-neutral-300 mx-1">│</span>
+                                UF: SP
+                                <span class="text-neutral-300 mx-1">│</span>
+                                Região: Sudeste
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2.5">
+                        <button class="h-9 px-4 border border-neutral-200 bg-surface rounded-lg text-[12px] font-bold text-primary hover:border-neutral-400 transition-colors flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[16px]">ios_share</span> Exportar
+                        </button>
+                        <button class="h-9 px-5 bg-primary text-surface rounded-lg text-[12px] font-bold shadow-md shadow-primary/20 hover:bg-primary/90 transition-colors flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[16px]">summarize</span> Relatório Completo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ─── Tab Navigation ─── -->
+                <div class="flex gap-1 mb-5 border-b border-neutral-200/60">
+                    <button class="px-4 pb-2.5 text-[12px] font-bold text-accent border-b-2 border-accent -mb-px">Indicadores-Chave</button>
+                    <button class="px-4 pb-2.5 text-[12px] font-bold text-neutral-400 hover:text-primary border-b-2 border-transparent transition-colors">Evolução Histórica</button>
+                    <button class="px-4 pb-2.5 text-[12px] font-bold text-neutral-400 hover:text-primary border-b-2 border-transparent transition-colors">Dados Brutos</button>
+                    <button class="px-4 pb-2.5 text-[12px] font-bold text-neutral-400 hover:text-primary border-b-2 border-transparent transition-colors">Comparativo</button>
+                </div>
+
+                <!-- ─── KPI Cards ─── -->
+                <div class="grid grid-cols-5 gap-4">
+                    <!-- KPI: População -->
+                    <div class="rounded-xl border border-neutral-200/60 p-4 bg-surface hover:border-accent/40 transition-colors group">
+                        <div class="text-[10px] font-bold text-neutral-400 tracking-[0.1em] uppercase mb-2">POPULAÇÃO</div>
+                        <div class="text-[26px] font-black text-primary leading-none mb-2.5">12.3M</div>
+                        <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-600">
+                            <span class="material-symbols-outlined text-[14px]">trending_up</span> +1.2%
+                            <span class="text-neutral-400 font-medium ml-1">vs 2021</span>
+                        </div>
+                    </div>
+                    <!-- KPI: PIB per cap -->
+                    <div class="rounded-xl border border-neutral-200/60 p-4 bg-surface hover:border-accent/40 transition-colors group">
+                        <div class="text-[10px] font-bold text-neutral-400 tracking-[0.1em] uppercase mb-2">PIB PER CAPITA</div>
+                        <div class="text-[26px] font-black text-accent leading-none mb-2.5">R$54.3k</div>
+                        <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-600">
+                            <span class="material-symbols-outlined text-[14px]">trending_up</span> +3.8%
+                            <span class="text-neutral-400 font-medium ml-1">vs 2021</span>
+                        </div>
+                    </div>
+                    <!-- KPI: IDH -->
+                    <div class="rounded-xl border border-neutral-200/60 p-4 bg-surface hover:border-accent/40 transition-colors group">
+                        <div class="text-[10px] font-bold text-neutral-400 tracking-[0.1em] uppercase mb-2">IDH MUNICIPAL</div>
+                        <div class="text-[26px] font-black text-primary leading-none mb-2.5">0.805</div>
+                        <div class="w-full bg-neutral-100 h-1.5 rounded-full overflow-hidden">
+                            <div class="h-full bg-accent rounded-full" style="width:80.5%"></div>
+                        </div>
+                    </div>
+                    <!-- Sparkline Chart -->
+                    <div class="rounded-xl border border-neutral-200/60 p-4 bg-surface hover:border-accent/40 transition-colors">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-[10px] font-bold text-neutral-400 tracking-[0.1em] uppercase">EVOLUÇÃO PIB</div>
+                            <span class="material-symbols-outlined text-emerald-500 text-[16px]">show_chart</span>
+                        </div>
+                        <div class="h-9 flex items-end gap-[3px] pt-1">
+                            <div class="flex-1 bg-primary/10 h-[20%] rounded-t-sm"></div>
+                            <div class="flex-1 bg-primary/15 h-[30%] rounded-t-sm"></div>
+                            <div class="flex-1 bg-primary/25 h-[50%] rounded-t-sm"></div>
+                            <div class="flex-1 bg-primary/40 h-[60%] rounded-t-sm"></div>
+                            <div class="flex-1 bg-primary/60 h-[80%] rounded-t-sm"></div>
+                            <div class="flex-1 bg-accent h-[100%] rounded-t-sm"></div>
+                        </div>
+                    </div>
+                    <!-- Benchmarking -->
+                    <div class="rounded-xl border border-neutral-200/60 p-4 bg-surface hover:border-accent/40 transition-colors">
+                        <div class="text-[10px] font-bold text-neutral-400 tracking-[0.1em] uppercase mb-2.5 pb-1.5 border-b border-neutral-100">VS. MÉDIA NACIONAL</div>
+                        <ul class="space-y-1.5">
+                            <li class="flex justify-between text-[11px]">
+                                <span class="text-neutral-600 font-medium">Educação</span>
+                                <span class="font-bold text-emerald-600">+18%</span>
+                            </li>
+                            <li class="flex justify-between text-[11px]">
+                                <span class="text-neutral-600 font-medium">Saúde</span>
+                                <span class="font-bold text-emerald-600">+25%</span>
+                            </li>
+                            <li class="flex justify-between text-[11px]">
+                                <span class="text-neutral-600 font-medium">Saneamento</span>
+                                <span class="font-bold text-rose-600">-6%</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
