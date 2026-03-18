@@ -9,12 +9,9 @@
 ### 1.1. Configuração Inicial
 
 ```bash
-# Criar repositório
-gh repo create sisinfo-geointel --private --description "SisInfo GeoIntel - Plataforma de Inteligência Territorial"
-
 # Clonar e configurar
-git clone https://github.com/<org>/sisinfo-geointel.git
-cd sisinfo-geointel
+git clone https://github.com/eduardopfigueira/SisInfo-GeoIntel.git
+cd SisInfo-GeoIntel
 git checkout -b develop
 ```
 
