@@ -1,0 +1,1248 @@
+openapi: 3.0.3
+info:
+  title: SisInfo / GeoIntel API
+  description: API REST para o SisInfo / GeoIntel V2, plataforma Web focada em análise de dados, inteligência territorial e indicadores socioeconômicos.
+  version: 1.0.0
+servers:
+  - url: https://api.geointel.gov.br/api/v1
+    description: Servidor de Produção
+  - url: http://localhost:8000/api/v1
+    description: Servidor Local
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              nullable: true
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        nome:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+            enum: [VIEWER, ANALYST, ADMIN]
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        token_type:
+          type: string
+          example: bearer
+        expires_in:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+
+    RefreshRequest:
+      type: object
+      required:
+        - refresh_token
+      properties:
+        refresh_token:
+          type: string
+
+    RefreshResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        expires_in:
+          type: integer
+
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - nome
+        - password
+        - roles
+      properties:
+        email:
+          type: string
+          format: email
+        nome:
+          type: string
+        password:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+            enum: [VIEWER, ANALYST, ADMIN]
+
+    Municipio:
+      type: object
+      properties:
+        codigo_ibge:
+          type: string
+        nome:
+          type: string
+        sigla_estado:
+          type: string
+        sigla_regiao:
+          type: string
+        area_km2:
+          type: number
+        capital:
+          type: boolean
+        longitude:
+          type: number
+        latitude:
+          type: number
+        altitude:
+          type: number
+
+    MunicipioDetalhe:
+      allOf:
+        - $ref: '#/components/schemas/Municipio'
+        - type: object
+          properties:
+            estado:
+              type: object
+              properties:
+                sigla:
+                  type: string
+                nome:
+                  type: string
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        per_page:
+          type: integer
+        total:
+          type: integer
+        total_pages:
+          type: integer
+
+    MunicipiosResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Municipio'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    SerieValor:
+      type: object
+      properties:
+        ano:
+          type: integer
+        valor:
+          type: number
+        indice_posicional:
+          type: number
+
+    IndicadorMunicipio:
+      type: object
+      properties:
+        indicador_id:
+          type: integer
+        nome:
+          type: string
+        unidade:
+          type: string
+        categoria:
+          type: string
+        serie:
+          type: array
+          items:
+            $ref: '#/components/schemas/SerieValor'
+
+    MunicipiosIndicadoresResponse:
+      type: object
+      properties:
+        municipio:
+          type: object
+          properties:
+            codigo_ibge:
+              type: string
+            nome:
+              type: string
+        indicadores:
+          type: array
+          items:
+            $ref: '#/components/schemas/IndicadorMunicipio'
+
+    BenchmarkingItem:
+      type: object
+      properties:
+        indicador:
+          type: string
+        valor_municipio:
+          type: number
+        media_estadual:
+          type: number
+        media_nacional:
+          type: number
+        ranking_estadual:
+          type: integer
+        ranking_nacional:
+          type: integer
+        tendencia:
+          type: string
+
+    BenchmarkingResponse:
+      type: object
+      properties:
+        municipio:
+          type: string
+        estado:
+          type: string
+        ano:
+          type: integer
+        comparativo:
+          type: array
+          items:
+            $ref: '#/components/schemas/BenchmarkingItem'
+
+    MunicipioUpdate:
+      type: object
+      properties:
+        nome:
+          type: string
+        area_km2:
+          type: number
+        altitude:
+          type: number
+        capital:
+          type: boolean
+
+    Indicador:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        unidade:
+          type: string
+        categoria:
+          type: string
+        maior_melhor:
+          type: boolean
+        descricao:
+          type: string
+
+    IndicadoresResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Indicador'
+
+    ValorIndice:
+      type: object
+      properties:
+        valor:
+          type: number
+        indice:
+          type: number
+
+    Estatisticas:
+      type: object
+      properties:
+        min:
+          type: number
+        max:
+          type: number
+        media:
+          type: number
+        mediana:
+          type: number
+        total_municipios:
+          type: integer
+
+    MapaResponse:
+      type: object
+      properties:
+        indicador:
+          type: object
+          properties:
+            id:
+              type: integer
+            nome:
+              type: string
+            maior_melhor:
+              type: boolean
+        ano:
+          type: integer
+        valores:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ValorIndice'
+        estatisticas:
+          $ref: '#/components/schemas/Estatisticas'
+
+    RankingItem:
+      type: object
+      properties:
+        posicao:
+          type: integer
+        codigo_ibge:
+          type: string
+        nome:
+          type: string
+        valor:
+          type: number
+        indice:
+          type: number
+
+    RankingResponse:
+      type: object
+      properties:
+        ranking:
+          type: array
+          items:
+            $ref: '#/components/schemas/RankingItem'
+
+    SerieDado:
+      type: object
+      properties:
+        ano:
+          type: integer
+        valor:
+          type: number
+
+    SerieMunicipio:
+      type: object
+      properties:
+        codigo_ibge:
+          type: string
+        nome:
+          type: string
+        dados:
+          type: array
+          items:
+            $ref: '#/components/schemas/SerieDado'
+
+    SerieTemporalResponse:
+      type: object
+      properties:
+        indicador:
+          type: object
+          properties:
+            id:
+              type: integer
+            nome:
+              type: string
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/SerieMunicipio'
+
+    Kpi:
+      type: object
+      properties:
+        titulo:
+          type: string
+        valor:
+          type: number
+        variacao_percentual:
+          type: number
+        tendencia:
+          type: string
+        icone:
+          type: string
+
+    DashboardKpisResponse:
+      type: object
+      properties:
+        kpis:
+          type: array
+          items:
+            $ref: '#/components/schemas/Kpi'
+
+    ComparacaoRequest:
+      type: object
+      required:
+        - municipios
+        - indicadores
+        - ano
+      properties:
+        municipios:
+          type: array
+          items:
+            type: string
+        indicadores:
+          type: array
+          items:
+            type: integer
+        ano:
+          type: integer
+
+    IndicadorComparacao:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        valores:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ValorIndice'
+
+    ComparacaoResponse:
+      type: object
+      properties:
+        comparacao:
+          type: object
+          properties:
+            municipios:
+              type: array
+              items:
+                type: object
+                properties:
+                  codigo_ibge:
+                    type: string
+                  nome:
+                    type: string
+            indicadores:
+              type: array
+              items:
+                $ref: '#/components/schemas/IndicadorComparacao'
+            radar_data:
+              type: object
+              properties:
+                dimensoes:
+                  type: array
+                  items:
+                    type: string
+                perfis:
+                  type: object
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: number
+
+    GerarRelatorioRequest:
+      type: object
+      required:
+        - codigo_ibge
+        - ano
+      properties:
+        codigo_ibge:
+          type: string
+        ano:
+          type: integer
+        formato:
+          type: string
+          enum: [json, pdf]
+          default: json
+        incluir_graficos:
+          type: boolean
+          default: true
+
+    RelatorioResponse:
+      type: object
+      properties:
+        relatorio:
+          type: object
+          properties:
+            ref_documento:
+              type: string
+            data_emissao:
+              type: string
+              format: date
+            municipio:
+              type: object
+              properties:
+                codigo_ibge:
+                  type: string
+                nome:
+                  type: string
+                estado:
+                  type: string
+            sumario_executivo:
+              type: string
+            kpis:
+              type: array
+              items:
+                type: object
+            graficos_data:
+              type: object
+            tabela_detalhamento:
+              type: array
+              items:
+                type: object
+            meta:
+              type: object
+              properties:
+                analista:
+                  type: string
+                classificacao:
+                  type: string
+
+    GeometriaUpdate:
+      type: object
+      required:
+        - tipo
+        - geojson
+      properties:
+        tipo:
+          type: string
+          enum: [geojson]
+        geojson:
+          type: object
+          properties:
+            type:
+              type: string
+            geometry:
+              type: object
+            properties:
+              type: object
+
+    ValoresIndicadorRequest:
+      type: object
+      required:
+        - codigo_ibge
+        - valores
+      properties:
+        codigo_ibge:
+          type: string
+        valores:
+          type: array
+          items:
+            type: object
+            properties:
+              ano:
+                type: integer
+              valor:
+                type: number
+
+    BulkImportResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        registros_processados:
+          type: integer
+        registros_inseridos:
+          type: integer
+        registros_atualizados:
+          type: integer
+        erros:
+          type: integer
+        detalhes_erros:
+          type: array
+          items:
+            type: object
+            properties:
+              linha:
+                type: integer
+              erro:
+                type: string
+
+security:
+  - bearerAuth: []
+
+paths:
+  /auth/login:
+    post:
+      summary: Autentica usuário e retorna tokens JWT
+      tags:
+        - Auth
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/refresh:
+    post:
+      summary: Renova o access token usando o refresh token
+      tags:
+        - Auth
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: Token renovado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshResponse'
+        '401':
+          description: Refresh token inválido ou expirado
+
+  /auth/register:
+    post:
+      summary: Cria novo usuário
+      description: Requer privilégios de ADMIN
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Usuário criado com sucesso
+        '403':
+          description: Acesso negado
+
+  /municipios:
+    get:
+      summary: Lista municípios com filtros e paginação
+      tags:
+        - Municípios
+      parameters:
+        - in: query
+          name: estado
+          schema:
+            type: string
+          description: Sigla UF (ex SP)
+        - in: query
+          name: regiao
+          schema:
+            type: string
+          description: Sigla região (ex SE)
+        - in: query
+          name: capital
+          schema:
+            type: boolean
+          description: Filtrar apenas capitais
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Busca por nome (ILIKE)
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: per_page
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+      responses:
+        '200':
+          description: Lista de municípios
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MunicipiosResponse'
+
+  /municipios/{codigo_ibge}:
+    get:
+      summary: Retorna detalhes de um município específico
+      tags:
+        - Municípios
+      parameters:
+        - in: path
+          name: codigo_ibge
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes do município
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MunicipioDetalhe'
+        '404':
+          description: Município não encontrado
+
+    put:
+      summary: Atualiza metadados cadastrais de um município
+      description: Requer privilégios de ADMIN
+      tags:
+        - Municípios
+      parameters:
+        - in: path
+          name: codigo_ibge
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MunicipioUpdate'
+      responses:
+        '200':
+          description: Município atualizado com sucesso
+        '403':
+          description: Acesso negado
+        '404':
+          description: Município não encontrado
+
+  /municipios/{codigo_ibge}/indicadores:
+    get:
+      summary: Retorna todos os indicadores de um município
+      tags:
+        - Municípios
+      parameters:
+        - in: path
+          name: codigo_ibge
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: ano
+          schema:
+            type: integer
+        - in: query
+          name: ano_inicio
+          schema:
+            type: integer
+        - in: query
+          name: ano_fim
+          schema:
+            type: integer
+        - in: query
+          name: categoria
+          schema:
+            type: string
+        - in: query
+          name: indicador_id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Indicadores do município
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MunicipiosIndicadoresResponse'
+        '404':
+          description: Município não encontrado
+
+  /municipios/{codigo_ibge}/benchmarking:
+    get:
+      summary: Compara indicadores do município com médias estaduais e nacionais
+      tags:
+        - Municípios
+      parameters:
+        - in: path
+          name: codigo_ibge
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Comparativo de benchmarking
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BenchmarkingResponse'
+        '404':
+          description: Município não encontrado
+
+  /indicadores:
+    get:
+      summary: Lista todos os indicadores disponíveis
+      tags:
+        - Indicadores
+      parameters:
+        - in: query
+          name: categoria
+          schema:
+            type: string
+        - in: query
+          name: search
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de indicadores
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndicadoresResponse'
+
+  /indicadores/{id}/mapa:
+    get:
+      summary: Retorna dados otimizados para renderização de mapa coroplético
+      tags:
+        - Indicadores
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: ano
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: estado
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dados do mapa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MapaResponse'
+        '404':
+          description: Indicador não encontrado
+
+  /indicadores/{id}/ranking:
+    get:
+      summary: Retorna ranking de municípios para um indicador/ano
+      tags:
+        - Indicadores
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: ano
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: limite
+          schema:
+            type: integer
+            default: 20
+        - in: query
+          name: estado
+          schema:
+            type: string
+        - in: query
+          name: ordem
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: Ranking de municípios
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RankingResponse'
+        '404':
+          description: Indicador não encontrado
+
+  /indicadores/{id}/serie-temporal:
+    get:
+      summary: Retorna série temporal de um indicador para N municípios
+      tags:
+        - Indicadores
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: municipios
+          required: true
+          schema:
+            type: string
+          description: Códigos IBGE separados por vírgula (max 5)
+        - in: query
+          name: ano_inicio
+          schema:
+            type: integer
+            default: 2010
+        - in: query
+          name: ano_fim
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Série temporal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SerieTemporalResponse'
+        '404':
+          description: Indicador não encontrado
+        '400':
+          description: Parâmetros inválidos
+
+  /dashboard/kpis:
+    get:
+      summary: Retorna KPIs globais para o ribbon do topo do dashboard
+      tags:
+        - Dashboard
+      parameters:
+        - in: query
+          name: estado
+          schema:
+            type: string
+        - in: query
+          name: ano
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: KPIs do dashboard
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardKpisResponse'
+
+  /dashboard/comparacao:
+    post:
+      summary: Gera análise comparativa para múltiplas cidades
+      tags:
+        - Dashboard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComparacaoRequest'
+      responses:
+        '200':
+          description: Dados de comparação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComparacaoResponse'
+        '400':
+          description: Parâmetros inválidos
+
+  /reports/gerar:
+    post:
+      summary: Gera dossiê executivo para um município
+      tags:
+        - Relatórios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GerarRelatorioRequest'
+      responses:
+        '200':
+          description: Relatório gerado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelatorioResponse'
+        '400':
+          description: Parâmetros inválidos
+        '404':
+          description: Município não encontrado
+
+  /reports/exportar/{ref_documento}:
+    get:
+      summary: Exporta relatório em PDF
+      description: Requer privilégios de ANALYST
+      tags:
+        - Relatórios
+      parameters:
+        - in: path
+          name: ref_documento
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: PDF do relatório
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '403':
+          description: Acesso negado
+        '404':
+          description: Documento não encontrado
+
+  /datasets:
+    get:
+      summary: Lista datasets disponíveis
+      tags:
+        - Data Catalog
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: fonte
+          schema:
+            type: string
+        - in: query
+          name: frequencia
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de datasets
+
+  /datasets/{id}:
+    get:
+      summary: Detalhes de um dataset com dicionário de dados
+      tags:
+        - Data Catalog
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes do dataset
+        '404':
+          description: Dataset não encontrado
+
+  /datasets/{id}/download:
+    get:
+      summary: Download RAW em CSV da base
+      description: Requer privilégios de ANALYST
+      tags:
+        - Data Catalog
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Arquivo CSV
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '403':
+          description: Acesso negado
+        '404':
+          description: Dataset não encontrado
+
+  /admin/municipios/{codigo_ibge}/geometria:
+    put:
+      summary: Atualiza geometria de um município
+      description: Requer privilégios de ADMIN
+      tags:
+        - Admin
+      parameters:
+        - in: path
+          name: codigo_ibge
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GeometriaUpdate'
+      responses:
+        '200':
+          description: Geometria atualizada com sucesso
+        '403':
+          description: Acesso negado
+        '404':
+          description: Município não encontrado
+
+  /admin/indicadores/{id}/valores:
+    post:
+      summary: Insere/atualiza valores de indicador para um município
+      description: Requer privilégios de ADMIN
+      tags:
+        - Admin
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValoresIndicadorRequest'
+      responses:
+        '200':
+          description: Valores atualizados com sucesso
+        '403':
+          description: Acesso negado
+        '404':
+          description: Indicador não encontrado
+
+  /admin/import/bulk:
+    post:
+      summary: Importação em massa via CSV
+      description: Requer privilégios de ADMIN
+      tags:
+        - Admin
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Arquivo CSV
+                mapping:
+                  type: string
+                  description: JSON string de mapeamento de colunas
+                indicador_id:
+                  type: integer
+                  description: ID do indicador alvo
+      responses:
+        '200':
+          description: Importação concluída
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkImportResponse'
+        '400':
+          description: Erro no arquivo ou mapeamento
+        '403':
+          description: Acesso negado
+
+  /admin/users:
+    get:
+      summary: Lista usuários do sistema
+      description: Requer privilégios de ADMIN
+      tags:
+        - Admin
+      responses:
+        '200':
+          description: Lista de usuários
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '403':
+          description: Acesso negado
+
+    post:
+      summary: Cria novo usuário
+      description: Requer privilégios de ADMIN
+      tags:
+        - Admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Usuário criado com sucesso
+        '403':
+          description: Acesso negado
+
+  /admin/users/{id}/roles:
+    put:
+      summary: Atualiza roles de um usuário
+      description: Requer privilégios de ADMIN
+      tags:
+        - Admin
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - roles
+              properties:
+                roles:
+                  type: array
+                  items:
+                    type: string
+                    enum: [VIEWER, ANALYST, ADMIN]
+      responses:
+        '200':
+          description: Roles atualizadas com sucesso
+        '403':
+          description: Acesso negado
+        '404':
+          description: Usuário não encontrado
