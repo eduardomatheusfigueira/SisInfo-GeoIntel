@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Catálogo de Dados — SisInfo</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL@20..48,100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { "primary":"#14213d","accent":"#fca311","muted":"#e5e5e5","surface":"#ffffff" }, fontFamily: { "sans":["Inter","system-ui","sans-serif"] } } } }
+    </script>
+    <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="h-screen w-screen overflow-hidden bg-neutral-50 font-sans flex flex-col antialiased">
+    <header class="h-14 flex items-center justify-between border-b border-muted bg-surface px-6 z-10 shrink-0">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-surface text-[18px]" style="font-variation-settings:'FILL' 1">public</span></div>
+            <span class="text-[13px] font-extrabold text-primary">SisInfo</span>
+            <span class="text-[9px] font-bold text-neutral-400 tracking-[0.12em] uppercase ml-1">Catálogo</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="relative w-80">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-[18px]">search</span>
+                <input type="text" placeholder="Pesquisar indicadores, fontes…" class="w-full pl-10 pr-4 py-2 bg-neutral-100 border-none rounded-lg text-[12px] font-medium focus:ring-2 focus:ring-accent/50 outline-none">
+            </div>
+            <button class="w-9 h-9 rounded-lg flex items-center justify-center text-neutral-400 hover:bg-neutral-100"><span class="material-symbols-outlined text-[20px]">filter_list</span></button>
+        </div>
+    </header>
+    <div class="flex flex-1 overflow-hidden">
+        <aside class="w-[240px] bg-surface border-r border-muted p-5 flex flex-col gap-6 overflow-y-auto hidden lg:flex shrink-0">
+            <div>
+                <h3 class="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.15em] mb-3">Temas</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center gap-2.5 cursor-pointer group"><input type="checkbox" checked class="rounded text-accent focus:ring-accent/50 w-4 h-4 border-neutral-300"><span class="text-[12px] font-medium text-neutral-700 flex-1">Economia</span><span class="text-[10px] text-neutral-400 bg-neutral-100 px-2 rounded-full font-bold">42</span></label>
+                    <label class="flex items-center gap-2.5 cursor-pointer group"><input type="checkbox" checked class="rounded text-accent focus:ring-accent/50 w-4 h-4 border-neutral-300"><span class="text-[12px] font-medium text-neutral-700 flex-1">Demografia</span><span class="text-[10px] text-neutral-400 bg-neutral-100 px-2 rounded-full font-bold">18</span></label>
+                    <label class="flex items-center gap-2.5 cursor-pointer group"><input type="checkbox" class="rounded text-accent focus:ring-accent/50 w-4 h-4 border-neutral-300"><span class="text-[12px] font-medium text-neutral-700 flex-1">Saúde</span><span class="text-[10px] text-neutral-400 bg-neutral-100 px-2 rounded-full font-bold">35</span></label>
+                    <label class="flex items-center gap-2.5 cursor-pointer group"><input type="checkbox" class="rounded text-accent focus:ring-accent/50 w-4 h-4 border-neutral-300"><span class="text-[12px] font-medium text-neutral-700 flex-1">Educação</span><span class="text-[10px] text-neutral-400 bg-neutral-100 px-2 rounded-full font-bold">21</span></label>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.15em] mb-3">Fontes</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center gap-2.5 cursor-pointer"><input type="checkbox" class="rounded text-accent focus:ring-accent/50 w-4 h-4 border-neutral-300"><span class="text-[12px] font-medium text-neutral-700">IBGE</span></label>
+                    <label class="flex items-center gap-2.5 cursor-pointer"><input type="checkbox" class="rounded text-accent focus:ring-accent/50 w-4 h-4 border-neutral-300"><span class="text-[12px] font-medium text-neutral-700">DATASUS</span></label>
+                    <label class="flex items-center gap-2.5 cursor-pointer"><input type="checkbox" class="rounded text-accent focus:ring-accent/50 w-4 h-4 border-neutral-300"><span class="text-[12px] font-medium text-neutral-700">SICONFI</span></label>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.15em] mb-3">Nível Geográfico</h3>
+                <select class="w-full text-[12px] border-neutral-200 rounded-lg focus:ring-accent focus:border-accent font-medium"><option>Todos</option><option>Município</option><option>Estado</option></select>
+            </div>
+        </aside>
+        <main class="flex-1 overflow-y-auto p-8">
+            <div class="flex justify-between items-end mb-7">
+                <div>
+                    <h1 class="text-[22px] font-black text-primary tracking-tight mb-1">Repositório de Dados Oficiais</h1>
+                    <p class="text-[13px] text-neutral-500 font-medium">Acesso a 142 bases de dados curadas de fontes governamentais certificadas.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                <div class="bg-surface border border-muted rounded-xl p-5 flex flex-col hover:border-accent/40 hover:shadow-lg transition-all group cursor-pointer">
+                    <div class="flex justify-between items-start mb-3"><span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-100"><span class="material-symbols-outlined text-[12px]">account_balance</span>Economia</span><button class="text-neutral-300 hover:text-accent"><span class="material-symbols-outlined text-[20px]">bookmark_border</span></button></div>
+                    <h3 class="text-[15px] font-bold text-primary mb-1.5 group-hover:text-accent transition-colors">PIB per Capita Municipal</h3>
+                    <p class="text-[12px] text-neutral-500 mb-4 flex-1 line-clamp-3">Produto Interno Bruto per capita a preços correntes dos municípios brasileiros.</p>
+                    <div class="border-t border-neutral-100 pt-3 flex justify-between text-[10px] text-neutral-400 font-semibold"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">database</span>IBGE, 2021</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">update</span>2 dias</span></div>
+                </div>
+                <div class="bg-surface border border-muted rounded-xl p-5 flex flex-col hover:border-accent/40 hover:shadow-lg transition-all group cursor-pointer">
+                    <div class="flex justify-between items-start mb-3"><span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-100"><span class="material-symbols-outlined text-[12px]">local_hospital</span>Saúde</span><button class="text-neutral-300 hover:text-accent"><span class="material-symbols-outlined text-[20px]">bookmark_border</span></button></div>
+                    <h3 class="text-[15px] font-bold text-primary mb-1.5 group-hover:text-accent transition-colors">Taxa de Mortalidade Infantil</h3>
+                    <p class="text-[12px] text-neutral-500 mb-4 flex-1 line-clamp-3">Óbitos de menores de um ano por mil nascidos vivos.</p>
+                    <div class="border-t border-neutral-100 pt-3 flex justify-between text-[10px] text-neutral-400 font-semibold"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">database</span>DATASUS, 2022</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">update</span>1 mês</span></div>
+                </div>
+                <div class="bg-surface border border-muted rounded-xl p-5 flex flex-col hover:border-accent/40 hover:shadow-lg transition-all group cursor-pointer">
+                    <div class="flex justify-between items-start mb-3"><span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-100"><span class="material-symbols-outlined text-[12px]">school</span>Educação</span><button class="text-accent"><span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1">bookmark</span></button></div>
+                    <h3 class="text-[15px] font-bold text-primary mb-1.5 group-hover:text-accent transition-colors">IDEB — Anos Iniciais</h3>
+                    <p class="text-[12px] text-neutral-500 mb-4 flex-1 line-clamp-3">Índice de Desenvolvimento da Educação Básica via Saeb e fluxo escolar.</p>
+                    <div class="border-t border-neutral-100 pt-3 flex justify-between text-[10px] text-neutral-400 font-semibold"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">database</span>INEP, 2021</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">update</span>3 meses</span></div>
+                </div>
+                <div class="bg-surface border border-muted rounded-xl p-5 flex flex-col hover:border-accent/40 hover:shadow-lg transition-all group cursor-pointer">
+                    <div class="flex justify-between items-start mb-3"><span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-[10px] font-bold bg-purple-50 text-purple-600 border border-purple-100"><span class="material-symbols-outlined text-[12px]">groups</span>Demografia</span><button class="text-neutral-300 hover:text-accent"><span class="material-symbols-outlined text-[20px]">bookmark_border</span></button></div>
+                    <h3 class="text-[15px] font-bold text-primary mb-1.5 group-hover:text-accent transition-colors">População Residente Estimada</h3>
+                    <p class="text-[12px] text-neutral-500 mb-4 flex-1 line-clamp-3">Estimativas anuais da população residente por município.</p>
+                    <div class="border-t border-neutral-100 pt-3 flex justify-between text-[10px] text-neutral-400 font-semibold"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">database</span>IBGE, 2024</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">update</span>1 dia</span></div>
+                </div>
+                <div class="bg-surface border border-muted rounded-xl p-5 flex flex-col hover:border-accent/40 hover:shadow-lg transition-all group cursor-pointer">
+                    <div class="flex justify-between items-start mb-3"><span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-100"><span class="material-symbols-outlined text-[12px]">account_balance</span>Economia</span><button class="text-neutral-300 hover:text-accent"><span class="material-symbols-outlined text-[20px]">bookmark_border</span></button></div>
+                    <h3 class="text-[15px] font-bold text-primary mb-1.5 group-hover:text-accent transition-colors">Receita Corrente Líquida</h3>
+                    <p class="text-[12px] text-neutral-500 mb-4 flex-1 line-clamp-3">Somatório das receitas correntes deduzidas das transferências.</p>
+                    <div class="border-t border-neutral-100 pt-3 flex justify-between text-[10px] text-neutral-400 font-semibold"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">database</span>SICONFI, 2023</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">update</span>5 dias</span></div>
+                </div>
+                <div class="bg-surface border border-muted rounded-xl p-5 flex flex-col hover:border-accent/40 hover:shadow-lg transition-all group cursor-pointer">
+                    <div class="flex justify-between items-start mb-3"><span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-100"><span class="material-symbols-outlined text-[12px]">water_drop</span>Saneamento</span><button class="text-neutral-300 hover:text-accent"><span class="material-symbols-outlined text-[20px]">bookmark_border</span></button></div>
+                    <h3 class="text-[15px] font-bold text-primary mb-1.5 group-hover:text-accent transition-colors">Cobertura de Água e Esgoto</h3>
+                    <p class="text-[12px] text-neutral-500 mb-4 flex-1 line-clamp-3">Percentual de domicílios atendidos por rede de água e esgoto.</p>
+                    <div class="border-t border-neutral-100 pt-3 flex justify-between text-[10px] text-neutral-400 font-semibold"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">database</span>SNIS, 2022</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">update</span>2 semanas</span></div>
+                </div>
+            </div>
+            <div class="mt-10 flex justify-center pb-6"><nav class="flex gap-1">
+                <button class="w-9 h-9 flex items-center justify-center rounded-lg text-neutral-400" disabled><span class="material-symbols-outlined text-[18px]">chevron_left</span></button>
+                <button class="w-9 h-9 flex items-center justify-center rounded-lg bg-primary text-surface font-bold text-[12px]">1</button>
+                <button class="w-9 h-9 flex items-center justify-center rounded-lg text-neutral-500 hover:bg-neutral-200 font-bold text-[12px]">2</button>
+                <button class="w-9 h-9 flex items-center justify-center rounded-lg text-neutral-500 hover:bg-neutral-200 font-bold text-[12px]">3</button>
+                <span class="w-9 h-9 flex items-center justify-center text-neutral-400">…</span>
+                <button class="w-9 h-9 flex items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-100"><span class="material-symbols-outlined text-[18px]">chevron_right</span></button>
+            </nav></div>
+        </main>
+    </div>
+</body>
+</html>
