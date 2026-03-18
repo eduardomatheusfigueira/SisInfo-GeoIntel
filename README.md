@@ -24,6 +24,7 @@ Todo o planejamento arquitetural, requisitos de UI/UX e especificações de enge
 | [📊 10 - Dicionário de Dados](docs/10_DATA_DICTIONARY.md) | Tabela unificada com indicadores, dicionário de variáveis e metodologias IBGE. |
 | [🛠️ 11 - Project Setup](docs/11_PROJECT_SETUP.md) | Guia de instalação para iniciarmos o desenvolvimento local (GitFlow, Node, Docker). |
 | [🧪 12 - Estratégia de Testes](docs/12_TESTING_STRATEGY.md) | TDD, Testes de Integração, Cobertura, e CI. |
+| [📅 13 - Plano de Ação e Cronograma](docs/13_ACTION_PLAN.md) | Cronograma WBS detalhado, fluxo de trabalho e estruturação das 8 fases do projeto. |
 
 ---
 
