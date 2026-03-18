@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Visualização Analítica — SisInfo / GeoIntel</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL@20..48,100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#14213d",
+                        "accent": "#fca311",
+                        "dark": "#000000",
+                        "muted": "#e5e5e5",
+                        "surface": "#ffffff",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "system-ui", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="h-screen w-screen overflow-hidden bg-neutral-50 flex antialiased">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SIDEBAR                                     -->
+    <!-- ═══════════════════════════════════════════ -->
+    <aside class="w-[240px] bg-primary text-surface flex flex-col shrink-0">
+        <!-- Brand -->
+        <div class="h-14 flex items-center px-5 border-b border-white/10">
+            <div class="w-7 h-7 rounded bg-white/10 flex items-center justify-center mr-3">
+                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">public</span>
+            </div>
+            <div class="leading-none">
+                <span class="text-[13px] font-extrabold tracking-tight block">SisInfo</span>
+                <span class="text-[9px] font-bold text-neutral-400 tracking-[0.12em] uppercase">Indicadores Municipais</span>
+            </div>
+        </div>
+
+        <!-- Main Nav -->
+        <nav class="flex-1 overflow-y-auto py-4 px-2.5">
+            <ul class="space-y-0.5">
+                <li>
+                    <a href="#" class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-accent/15 text-accent font-semibold text-[13px] border-l-[3px] border-accent -ml-[3px]">
+                        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1">bar_chart_4_bars</span> Visão Geral
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-neutral-400 hover:text-surface hover:bg-white/5 font-medium text-[13px] transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">compare_arrows</span> Comparativo Transversal
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-neutral-400 hover:text-surface hover:bg-white/5 font-medium text-[13px] transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">map</span> Mapa de Desempenho
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-neutral-400 hover:text-surface hover:bg-white/5 font-medium text-[13px] transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">timeline</span> Séries Temporais
+                    </a>
+                </li>
+            </ul>
+
+            <div class="mt-8">
+                <div class="text-[9px] font-bold text-neutral-500 tracking-[0.15em] uppercase px-3 mb-2">Configurações</div>
+                <ul class="space-y-0.5">
+                    <li>
+                        <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-400 hover:text-surface hover:bg-white/5 font-medium text-[13px] transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">settings</span> Parâmetros
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-400 hover:text-surface hover:bg-white/5 font-medium text-[13px] transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">database</span> Fontes de Dados
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- CTA -->
+        <div class="p-4 border-t border-white/10">
+            <button class="w-full py-2.5 bg-accent text-dark rounded-lg font-bold text-[12px] tracking-wide shadow-md shadow-accent/20 hover:brightness-110 transition-all flex items-center justify-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px]">add</span> Novo Relatório
+            </button>
+        </div>
+    </aside>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- MAIN CONTENT                                -->
+    <!-- ═══════════════════════════════════════════ -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto relative">
+        <!-- Header -->
+        <header class="shrink-0 flex justify-between items-center px-8 py-5 bg-surface border-b border-muted">
+            <div>
+                <h1 class="text-[22px] font-black tracking-tight text-primary">Dashboard de Performance</h1>
+                <p class="text-[13px] font-medium text-neutral-500 mt-0.5">Visualização analítica — Comparativo de indicadores socioeconômicos dos 5.568 municípios brasileiros</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-[11px] font-semibold text-neutral-400 tracking-wide uppercase">Última att: Hoje, 08:45</span>
+                <button class="w-9 h-9 flex items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-100 transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">search</span>
+                </button>
+                <button class="w-9 h-9 flex items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-100 transition-colors relative">
+                    <span class="material-symbols-outlined text-[20px]">notifications</span>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-surface"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard Area -->
+        <div class="flex-1 overflow-y-auto p-8 pb-28">
+            <!-- KPI Ribbon -->
+            <div class="grid grid-cols-4 gap-5 mb-7">
+                <div class="bg-surface rounded-xl p-5 border border-muted hover:border-accent/30 transition-colors shadow-sm">
+                    <div class="text-[10px] font-bold text-neutral-400 tracking-[0.12em] uppercase mb-2">Média de Performance</div>
+                    <div class="flex items-end justify-between">
+                        <span class="text-[28px] font-black text-primary leading-none">7.24</span>
+                        <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[12px]">trending_up</span>+4.5%
+                        </span>
+                    </div>
+                </div>
+                <div class="bg-surface rounded-xl p-5 border border-muted hover:border-accent/30 transition-colors shadow-sm">
+                    <div class="text-[10px] font-bold text-neutral-400 tracking-[0.12em] uppercase mb-2">Municípios Ativos</div>
+                    <div class="flex items-end justify-between mb-2">
+                        <span class="text-[28px] font-black text-primary leading-none">1.240</span>
+                        <span class="text-[11px] font-medium text-neutral-500">de 5.568</span>
+                    </div>
+                    <div class="w-full bg-neutral-100 h-1.5 rounded-full overflow-hidden"><div class="bg-accent h-full w-[22%] rounded-full"></div></div>
+                </div>
+                <div class="bg-surface rounded-xl p-5 border border-muted hover:border-accent/30 transition-colors shadow-sm relative overflow-hidden">
+                    <div class="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-blue-50 to-transparent pointer-events-none"></div>
+                    <div class="text-[10px] font-bold text-neutral-400 tracking-[0.12em] uppercase mb-2">Microrregião Destaque</div>
+                    <span class="text-[18px] font-bold text-primary leading-tight block">Sul (Região)</span>
+                    <div class="text-[11px] text-blue-600 font-semibold mt-1.5 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">arrow_upward</span> Lidera em Saúde e Educação
+                    </div>
+                </div>
+                <div class="bg-surface rounded-xl p-5 border-2 border-accent shadow-[0_0_20px_rgba(252,163,17,0.08)] relative">
+                    <span class="absolute top-4 right-4"><span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span></span></span>
+                    <div class="text-[10px] font-bold text-neutral-400 tracking-[0.12em] uppercase mb-2">Status</div>
+                    <span class="text-[16px] font-black text-primary leading-none">● Tempo Real</span>
+                </div>
+            </div>
+
+            <!-- Charts Grid (8 + 4) -->
+            <div class="grid grid-cols-12 gap-5 mb-7">
+                <!-- Bar Chart: Evolução Temporal -->
+                <div class="col-span-8 bg-surface rounded-xl border border-muted p-6 shadow-sm flex flex-col min-h-[380px]">
+                    <div class="flex justify-between items-center mb-5">
+                        <div>
+                            <h3 class="text-[13px] font-bold text-primary uppercase tracking-wider flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[16px]">bar_chart</span> Evolução Temporal do IDEB
+                            </h3>
+                            <div class="flex gap-4 mt-2">
+                                <span class="flex items-center gap-1.5 text-[11px] font-medium"><span class="w-2.5 h-2.5 rounded-full bg-primary"></span>Curitiba</span>
+                                <span class="flex items-center gap-1.5 text-[11px] font-medium"><span class="w-2.5 h-2.5 rounded-full bg-accent"></span>Florianópolis</span>
+                                <span class="flex items-center gap-1.5 text-[11px] font-medium text-neutral-400"><span class="w-5 h-[2px] bg-neutral-400 rounded"></span>Média Nacional</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-0.5 bg-neutral-100 p-1 rounded-lg">
+                            <button class="px-3 py-1 text-[11px] font-bold rounded-md bg-surface shadow-sm text-primary">12M</button>
+                            <button class="px-3 py-1 text-[11px] font-bold rounded-md text-neutral-400 hover:text-primary transition-colors">YTD</button>
+                            <button class="px-3 py-1 text-[11px] font-bold rounded-md text-neutral-400 hover:text-primary transition-colors">ALL</button>
+                        </div>
+                    </div>
+                    <div class="flex-1 bg-neutral-50 rounded-xl p-5 flex items-end justify-around gap-6 relative">
+                        <!-- Avg line -->
+                        <div class="absolute left-5 right-5 bottom-[42%] border-b border-dashed border-neutral-300 z-0">
+                            <span class="absolute -top-4 right-0 text-[9px] font-bold text-neutral-400 tracking-widest">MÉDIA 6.5</span>
+                        </div>
+                        <!-- Bar groups -->
+                        <div class="flex flex-col items-center gap-2 z-10 flex-1">
+                            <div class="flex gap-1.5 items-end h-48">
+                                <div class="w-7 bg-primary rounded-t" style="height:55%"></div>
+                                <div class="w-7 bg-accent rounded-t" style="height:45%"></div>
+                            </div>
+                            <span class="text-[10px] font-bold text-neutral-500">2019</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 z-10 flex-1">
+                            <div class="flex gap-1.5 items-end h-48">
+                                <div class="w-7 bg-primary rounded-t" style="height:62%"></div>
+                                <div class="w-7 bg-accent rounded-t" style="height:52%"></div>
+                            </div>
+                            <span class="text-[10px] font-bold text-neutral-500">2020</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 z-10 flex-1">
+                            <div class="flex gap-1.5 items-end h-48">
+                                <div class="w-7 bg-primary rounded-t" style="height:70%"></div>
+                                <div class="w-7 bg-accent rounded-t" style="height:60%"></div>
+                            </div>
+                            <span class="text-[10px] font-bold text-neutral-500">2021</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 z-10 flex-1">
+                            <div class="flex gap-1.5 items-end h-48">
+                                <div class="w-7 bg-primary rounded-t" style="height:82%"></div>
+                                <div class="w-7 bg-accent rounded-t" style="height:75%"></div>
+                            </div>
+                            <span class="text-[10px] font-bold text-neutral-500">2022</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 z-10 flex-1">
+                            <div class="flex gap-1.5 items-end h-48">
+                                <div class="w-7 bg-primary/70 rounded-t" style="height:92%"></div>
+                                <div class="w-7 bg-accent/70 rounded-t" style="height:88%"></div>
+                            </div>
+                            <span class="text-[10px] font-black text-accent">2023(E)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ranking -->
+                <div class="col-span-4 bg-surface rounded-xl border border-muted shadow-sm flex flex-col overflow-hidden min-h-[380px]">
+                    <div class="px-5 py-4 border-b border-muted flex justify-between items-center">
+                        <h3 class="text-[13px] font-bold text-primary uppercase tracking-wider flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px]">format_list_numbered</span> Ranking Geral
+                        </h3>
+                        <a href="#" class="text-[11px] font-bold text-accent hover:underline uppercase tracking-wide">Ver Todos</a>
+                    </div>
+                    <div class="flex-1 overflow-y-auto px-3 py-2">
+                        <!-- items -->
+                        <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors cursor-pointer group">
+                            <div class="w-7 h-7 rounded-lg bg-accent text-dark flex items-center justify-center text-[11px] font-black shadow-sm">1</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-[13px] font-bold text-primary truncate group-hover:text-accent transition-colors">Curitiba <span class="text-neutral-400 text-[11px] font-semibold ml-1">PR</span></div>
+                                <div class="text-[10px] text-neutral-400 font-semibold uppercase">IDHM: 0.823</div>
+                            </div>
+                            <div class="text-[14px] font-black text-primary">9.8</div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors cursor-pointer group">
+                            <div class="w-7 h-7 rounded-lg bg-neutral-200 text-neutral-600 flex items-center justify-center text-[11px] font-black">2</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-[13px] font-bold text-primary truncate group-hover:text-accent transition-colors">Florianópolis <span class="text-neutral-400 text-[11px] font-semibold ml-1">SC</span></div>
+                                <div class="text-[10px] text-neutral-400 font-semibold uppercase">IDHM: 0.847</div>
+                            </div>
+                            <div class="text-[14px] font-black text-primary flex items-center gap-1">9.5 <span class="material-symbols-outlined text-emerald-500 text-[14px]">arrow_upward</span></div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors cursor-pointer group">
+                            <div class="w-7 h-7 rounded-lg bg-neutral-200 text-neutral-600 flex items-center justify-center text-[11px] font-black">3</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-[13px] font-bold text-primary truncate group-hover:text-accent transition-colors">São Caetano <span class="text-neutral-400 text-[11px] font-semibold ml-1">SP</span></div>
+                                <div class="text-[10px] text-neutral-400 font-semibold uppercase">IDHM: 0.862</div>
+                            </div>
+                            <div class="text-[14px] font-black text-primary">9.2</div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors cursor-pointer group">
+                            <div class="w-7 h-7 rounded-lg bg-neutral-100 text-neutral-500 flex items-center justify-center text-[11px] font-black">4</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-[13px] font-bold text-primary truncate group-hover:text-accent transition-colors">Belo Horizonte <span class="text-neutral-400 text-[11px] font-semibold ml-1">MG</span></div>
+                                <div class="text-[10px] text-neutral-400 font-semibold uppercase">IDHM: 0.810</div>
+                            </div>
+                            <div class="text-[14px] font-black text-primary flex items-center gap-1">8.9 <span class="material-symbols-outlined text-rose-500 text-[14px]">arrow_downward</span></div>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors cursor-pointer group">
+                            <div class="w-7 h-7 rounded-lg bg-neutral-100 text-neutral-500 flex items-center justify-center text-[11px] font-black">5</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-[13px] font-bold text-primary truncate group-hover:text-accent transition-colors">Vitória <span class="text-neutral-400 text-[11px] font-semibold ml-1">ES</span></div>
+                                <div class="text-[10px] text-neutral-400 font-semibold uppercase">IDHM: 0.845</div>
+                            </div>
+                            <div class="text-[14px] font-black text-primary">8.7</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Row (7 + 5) -->
+            <div class="grid grid-cols-12 gap-5">
+                <!-- Comparativo por Pilar -->
+                <div class="col-span-7 bg-surface rounded-xl border border-muted p-6 shadow-sm">
+                    <div class="flex justify-between items-center mb-5">
+                        <h3 class="text-[13px] font-bold text-primary uppercase tracking-wider flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px]">stacked_bar_chart</span> Comparativo por Pilar de Gestão
+                        </h3>
+                        <select class="text-[12px] font-bold text-primary border border-neutral-200 rounded-lg px-3 py-1.5 bg-surface focus:ring-accent focus:border-accent cursor-pointer">
+                            <option>Saúde</option>
+                            <option>Educação</option>
+                            <option>Infraestrutura</option>
+                        </select>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1.5"><span class="font-semibold text-primary">Cobertura de Atenção Básica</span><span class="font-bold text-accent">92%</span></div>
+                            <div class="w-full bg-neutral-100 h-2 rounded-full overflow-hidden"><div class="h-full bg-accent rounded-full" style="width:92%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1.5"><span class="font-semibold text-primary">Infraestrutura Hospitalar</span><span class="font-bold text-primary">72%</span></div>
+                            <div class="w-full bg-neutral-100 h-2 rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:72%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1.5"><span class="font-semibold text-primary">Capacitação Profissional</span><span class="font-bold text-primary">88%</span></div>
+                            <div class="w-full bg-neutral-100 h-2 rounded-full overflow-hidden"><div class="h-full bg-primary/70 rounded-full" style="width:88%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[12px] mb-1.5"><span class="font-semibold text-primary">Taxa de Vacinação</span><span class="font-bold text-primary">65%</span></div>
+                            <div class="w-full bg-neutral-100 h-2 rounded-full overflow-hidden"><div class="h-full bg-primary/50 rounded-full" style="width:65%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Radar Chart -->
+                <div class="col-span-5 bg-surface rounded-xl border border-muted p-6 shadow-sm flex flex-col items-center">
+                    <div class="w-full flex justify-between items-center mb-4">
+                        <h3 class="text-[13px] font-bold text-primary uppercase tracking-wider flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px]">radar</span> Performance Multidimensional
+                        </h3>
+                        <button class="w-7 h-7 rounded-md flex items-center justify-center text-neutral-400 hover:bg-neutral-100 transition-colors">
+                            <span class="material-symbols-outlined text-[16px]">info</span>
+                        </button>
+                    </div>
+                    <!-- Simulated Radar -->
+                    <div class="relative w-48 h-48 flex items-center justify-center my-4">
+                        <div class="absolute w-48 h-48 border border-neutral-200 rounded-full"></div>
+                        <div class="absolute w-36 h-36 border border-neutral-200 rounded-full"></div>
+                        <div class="absolute w-24 h-24 border border-neutral-200 rounded-full"></div>
+                        <div class="absolute w-12 h-12 border border-neutral-200 rounded-full"></div>
+                        <div class="w-36 h-36 bg-accent/20 border-2 border-accent" style="clip-path: polygon(50% 5%, 95% 35%, 80% 95%, 20% 95%, 5% 35%);"></div>
+                        <span class="absolute -top-1 text-[9px] font-bold text-neutral-500 uppercase">Saúde</span>
+                        <span class="absolute -bottom-1 left-4 text-[9px] font-bold text-neutral-500 uppercase">Infra</span>
+                        <span class="absolute -bottom-1 right-3 text-[9px] font-bold text-neutral-500 uppercase">Finanças</span>
+                        <span class="absolute top-1/2 -translate-y-1/2 -left-4 text-[9px] font-bold text-neutral-500 uppercase">Educação</span>
+                        <span class="absolute top-1/2 -translate-y-1/2 -right-6 text-[9px] font-bold text-neutral-500 uppercase">Ambiente</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── Floating Comparison Dock ─── -->
+        <div class="absolute bottom-5 left-1/2 -translate-x-1/2 bg-primary/95 backdrop-blur-lg rounded-2xl shadow-2xl p-2 flex items-center gap-2 border border-white/10 z-20">
+            <div class="px-3.5 py-2 border-r border-white/10">
+                <span class="text-[10px] font-bold text-neutral-400 tracking-[0.1em] uppercase flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 1">location_on</span> Matriz Ativa
+                </span>
+            </div>
+            <div class="flex items-center gap-1.5 px-1.5">
+                <div class="flex items-center gap-2 bg-white/10 hover:bg-white/15 transition-colors pl-3 pr-2 py-1.5 rounded-lg cursor-pointer">
+                    <span class="w-2 h-2 rounded-full bg-accent"></span>
+                    <span class="text-[12px] font-medium text-surface">São Paulo</span>
+                    <span class="material-symbols-outlined text-surface/40 hover:text-surface text-[12px] ml-1">close</span>
+                </div>
+                <div class="flex items-center gap-2 bg-white/10 hover:bg-white/15 transition-colors pl-3 pr-2 py-1.5 rounded-lg cursor-pointer">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span class="text-[12px] font-medium text-surface">Curitiba</span>
+                    <span class="material-symbols-outlined text-surface/40 hover:text-surface text-[12px] ml-1">close</span>
+                </div>
+                <button class="px-2.5 py-1.5 rounded-lg border border-dashed border-white/20 text-white/60 hover:text-surface hover:border-white/40 transition-all text-[12px] font-medium flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[14px]">add</span> Add Cidade
+                </button>
+            </div>
+            <div class="pl-1.5">
+                <button class="px-4 py-2 bg-accent text-dark font-bold text-[12px] rounded-xl shadow-[0_0_12px_rgba(252,163,17,0.35)] hover:brightness-110 transition-all flex items-center gap-1.5">
+                    Gerar Comparativo <span class="material-symbols-outlined text-[16px]">launch</span>
+                </button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
