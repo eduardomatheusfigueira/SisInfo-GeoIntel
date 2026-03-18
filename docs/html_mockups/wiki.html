@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Documentação — SisInfo / GeoIntel</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL@20..48,100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { "primary":"#14213d","accent":"#fca311","muted":"#e5e5e5","surface":"#ffffff" }, fontFamily: { "sans":["Inter","system-ui","sans-serif"] } } } }
+    </script>
+    <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body class="h-screen w-screen overflow-hidden bg-neutral-50 font-sans flex flex-col antialiased">
+    <header class="h-14 flex items-center justify-between border-b border-muted bg-surface px-6 z-10 shrink-0">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-surface text-[18px]" style="font-variation-settings:'FILL' 1">public</span></div>
+            <span class="text-[13px] font-extrabold text-primary">SisInfo</span>
+            <span class="text-[9px] font-bold text-neutral-400 tracking-[0.12em] uppercase ml-1">Documentação</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="relative w-72">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-[18px]">search</span>
+                <input type="text" placeholder="Buscar na documentação…" class="w-full pl-10 pr-4 py-2 bg-neutral-100 border-none rounded-lg text-[12px] font-medium focus:ring-2 focus:ring-accent/50 outline-none">
+            </div>
+        </div>
+    </header>
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar Wiki Navigation -->
+        <aside class="w-[260px] bg-surface border-r border-muted flex flex-col overflow-y-auto shrink-0">
+            <nav class="p-5 flex-1">
+                <h3 class="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.15em] mb-3">Introdução</h3>
+                <ul class="space-y-0.5 mb-6">
+                    <li><a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-accent/10 text-accent font-semibold text-[12px] border-l-[3px] border-accent -ml-[3px]"><span class="material-symbols-outlined text-[16px]">info</span>O que é o SisInfo</a></li>
+                    <li><a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 font-medium text-[12px] transition-colors"><span class="material-symbols-outlined text-[16px]">rocket_launch</span>Início Rápido</a></li>
+                    <li><a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 font-medium text-[12px] transition-colors"><span class="material-symbols-outlined text-[16px]">architecture</span>Arquitetura</a></li>
+                </ul>
+                <h3 class="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.15em] mb-3">Guias de Uso</h3>
+                <ul class="space-y-0.5 mb-6">
+                    <li><a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 font-medium text-[12px] transition-colors"><span class="material-symbols-outlined text-[16px]">map</span>Módulo de Mapa</a></li>
+                    <li><a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 font-medium text-[12px] transition-colors"><span class="material-symbols-outlined text-[16px]">bar_chart</span>Dashboard Analítico</a></li>
+                    <li><a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 font-medium text-[12px] transition-colors"><span class="material-symbols-outlined text-[16px]">summarize</span>Gerador de Relatórios</a></li>
+                    <li><a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 font-medium text-[12px] transition-colors"><span class="material-symbols-outlined text-[16px]">database</span>Catálogo de Dados</a></li>
+                </ul>
+                <h3 class="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.15em] mb-3">Referência Técnica</h3>
+                <ul class="space-y-0.5 mb-6">
+                    <li><a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 font-medium text-[12px] transition-colors"><span class="material-symbols-outlined text-[16px]">calculate</span>Notas Metodológicas</a></li>
+                    <li><a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 font-medium text-[12px] transition-colors"><span class="material-symbols-outlined text-[16px]">api</span>API Reference</a></li>
+                    <li><a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 font-medium text-[12px] transition-colors"><span class="material-symbols-outlined text-[16px]">security</span>Segurança e Auth</a></li>
+                </ul>
+                <h3 class="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.15em] mb-3">Configurações</h3>
+                <ul class="space-y-0.5">
+                    <li><a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 font-medium text-[12px] transition-colors"><span class="material-symbols-outlined text-[16px]">settings</span>Conta e Sistema</a></li>
+                    <li><a href="#" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-neutral-600 hover:bg-neutral-50 font-medium text-[12px] transition-colors"><span class="material-symbols-outlined text-[16px]">help</span>FAQ / Suporte</a></li>
+                </ul>
+            </nav>
+            <div class="p-5 border-t border-muted">
+                <div class="bg-primary/5 rounded-xl p-4 text-center">
+                    <span class="material-symbols-outlined text-primary text-[28px] mb-1 block">support_agent</span>
+                    <p class="text-[11px] font-bold text-primary mb-2">Precisa de ajuda?</p>
+                    <button class="w-full py-2 bg-primary text-surface rounded-lg text-[11px] font-bold hover:bg-primary/90 transition-colors">Abrir Chamado</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Article Content -->
+        <main class="flex-1 overflow-y-auto">
+            <div class="max-w-3xl mx-auto px-12 py-10">
+                <!-- Breadcrumb -->
+                <nav class="flex items-center gap-1.5 text-[11px] text-neutral-400 font-medium mb-8">
+                    <a href="#" class="hover:text-accent transition-colors">Docs</a>
+                    <span class="material-symbols-outlined text-[12px]">chevron_right</span>
+                    <a href="#" class="hover:text-accent transition-colors">Introdução</a>
+                    <span class="material-symbols-outlined text-[12px]">chevron_right</span>
+                    <span class="text-primary font-semibold">O que é o SisInfo</span>
+                </nav>
+
+                <div class="prose prose-neutral max-w-none">
+                    <h1 class="text-[28px] font-black text-primary tracking-tight mb-2 !leading-tight">O que é o SisInfo</h1>
+                    <p class="text-[13px] text-neutral-500 font-medium mb-8 !mt-0">Última atualização: 18 de Março de 2026 • Tempo de leitura: 5 min</p>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-8 flex gap-3">
+                        <span class="material-symbols-outlined text-blue-600 text-[20px] mt-0.5 shrink-0">lightbulb</span>
+                        <div>
+                            <p class="text-[13px] text-blue-900 font-semibold mb-1">Visão Geral</p>
+                            <p class="text-[12px] text-blue-800/80 leading-relaxed">O SisInfo (Sistema de Informações) é uma plataforma Web GovTech focada em análise de dados, inteligência territorial e indicadores socioeconômicos para municípios brasileiros.</p>
+                        </div>
+                    </div>
+
+                    <h2 class="text-[18px] font-bold text-primary mb-3 mt-10 flex items-center gap-2">
+                        <span class="w-1 h-6 bg-accent rounded-full"></span>
+                        Objetivo da Plataforma
+                    </h2>
+                    <p class="text-[14px] text-neutral-700 leading-[1.8] mb-4">O sistema visa consolidar, processar e visualizar dados de diversas fontes oficiais (<strong class="text-primary">IBGE, DATASUS, FINBRA, SICONFI, INEP</strong>) em diferentes recortes espaciais — municípios, estados e regiões — oferecendo uma ferramenta analítica robusta para gestores públicos, pesquisadores e analistas de políticas públicas.</p>
+                    <p class="text-[14px] text-neutral-700 leading-[1.8] mb-4">A plataforma combina técnicas de <strong class="text-primary">geoprocessamento</strong> com análise estatística para gerar insights acionáveis sobre o desempenho socioeconômico dos territórios brasileiros.</p>
+
+                    <h2 class="text-[18px] font-bold text-primary mb-3 mt-10 flex items-center gap-2">
+                        <span class="w-1 h-6 bg-accent rounded-full"></span>
+                        Módulos do Sistema
+                    </h2>
+                    <div class="grid grid-cols-2 gap-4 my-6">
+                        <div class="border border-muted rounded-xl p-4 bg-surface hover:border-accent/40 transition-colors">
+                            <div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-accent text-[18px]">map</span><h4 class="text-[13px] font-bold text-primary">Inteligência Espacial</h4></div>
+                            <p class="text-[12px] text-neutral-600 leading-relaxed">Mapa interativo com visualização de dados em polígonos (coroplético) e pontos, com drill-down por localidade.</p>
+                        </div>
+                        <div class="border border-muted rounded-xl p-4 bg-surface hover:border-accent/40 transition-colors">
+                            <div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-accent text-[18px]">bar_chart</span><h4 class="text-[13px] font-bold text-primary">Dashboard Analítico</h4></div>
+                            <p class="text-[12px] text-neutral-600 leading-relaxed">Visualização comparativa guiada por dados estatísticos, com rankings, gráficos e ferramentas de comparação.</p>
+                        </div>
+                        <div class="border border-muted rounded-xl p-4 bg-surface hover:border-accent/40 transition-colors">
+                            <div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-accent text-[18px]">summarize</span><h4 class="text-[13px] font-bold text-primary">Gerador de Relatórios</h4></div>
+                            <p class="text-[12px] text-neutral-600 leading-relaxed">Dossiê dinâmico com perfil completo de uma localidade, otimizado para impressão e exportação PDF.</p>
+                        </div>
+                        <div class="border border-muted rounded-xl p-4 bg-surface hover:border-accent/40 transition-colors">
+                            <div class="flex items-center gap-2 mb-2"><span class="material-symbols-outlined text-accent text-[18px]">database</span><h4 class="text-[13px] font-bold text-primary">Catálogo de Dados</h4></div>
+                            <p class="text-[12px] text-neutral-600 leading-relaxed">Biblioteca interna com metadados, metodologias e acesso direto às fontes de dados oficiais utilizadas.</p>
+                        </div>
+                    </div>
+
+                    <h2 class="text-[18px] font-bold text-primary mb-3 mt-10 flex items-center gap-2">
+                        <span class="w-1 h-6 bg-accent rounded-full"></span>
+                        Próximos Passos
+                    </h2>
+                    <div class="bg-neutral-100 rounded-xl p-4 flex gap-4 mb-6 group hover:bg-neutral-200/60 transition-colors cursor-pointer">
+                        <span class="material-symbols-outlined text-accent text-[24px] mt-0.5">arrow_forward</span>
+                        <div>
+                            <h4 class="text-[14px] font-bold text-primary group-hover:text-accent transition-colors">Guia de Início Rápido</h4>
+                            <p class="text-[12px] text-neutral-500">Aprenda a navegar pelo mapa, aplicar filtros e gerar seu primeiro relatório em 5 minutos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Footer -->
+                <div class="border-t border-muted mt-12 pt-6 flex justify-between">
+                    <div></div>
+                    <a href="#" class="flex items-center gap-2 text-[12px] font-bold text-primary hover:text-accent transition-colors">Próximo: Início Rápido <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+                </div>
+            </div>
+        </main>
+
+        <!-- Table of Contents -->
+        <aside class="w-[200px] border-l border-muted p-5 hidden xl:block shrink-0 overflow-y-auto">
+            <h4 class="text-[9px] font-bold text-neutral-400 uppercase tracking-[0.15em] mb-4">Nesta Página</h4>
+            <ul class="space-y-2">
+                <li><a href="#" class="text-[11px] font-semibold text-accent border-l-2 border-accent pl-3 block">Objetivo da Plataforma</a></li>
+                <li><a href="#" class="text-[11px] font-medium text-neutral-500 hover:text-primary border-l-2 border-transparent pl-3 block transition-colors">Módulos do Sistema</a></li>
+                <li><a href="#" class="text-[11px] font-medium text-neutral-500 hover:text-primary border-l-2 border-transparent pl-3 block transition-colors">Próximos Passos</a></li>
+            </ul>
+        </aside>
+    </div>
+</body>
+</html>
