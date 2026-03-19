@@ -39,7 +39,7 @@
 | E0-03 | Task | Revisão do Schema do Banco | 3 | Must | 🟢 | `03_DATABASE_SCHEMA.md` aprovado; todas as tabelas e índices documentados |
 | E0-04 | Task | Definição de API contracts (OpenAPI) | 8 | Must | 🟢 | Arquivo `openapi.yaml` no repo com todos os endpoints de `/api/v1`; validado com Swagger |
 | E0-05 | Task | Revisão da Estratégia de Testes | 3 | Must | 🟢 | `12_TESTING_STRATEGY.md` aprovado; pirâmide de testes definida |
-| E0-06 | Task | Designação de equipe e responsabilidades | 2 | Must | 🔴 | Matrix RACI publicada; cada membro sabe suas responsabilidades |
+| E0-06 | Task | Designação de equipe e responsabilidades | 2 | Must | 🟢 | Matrix RACI publicada; cada membro sabe suas responsabilidades |
 
 ---
 
